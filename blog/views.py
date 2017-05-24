@@ -5,6 +5,7 @@ from django.utils import timezone
 
 from .models import Post
 from django.contrib.auth.models import User
+from django.contrib import messages
 
 from .forms import PostForm
 
@@ -37,6 +38,7 @@ def post_edit(request, post_id=None):
                 post.author = request.user
                 post.save()
             else:
+                messages.add_message(request, messages.ERROR, '管理者権限が必要です.')
                 return redirect('post_list')
             return redirect('post_detail', post_id=post.pk)
     else:
@@ -49,6 +51,7 @@ def post_delete(request, post_id):
     if request.user.is_authenticated():
         post.delete()
     else:
+        messages.add_message(request, messages.ERROR, '管理者権限が必要です.')
         return redirect('post_list')
     return redirect('post_list')
 
